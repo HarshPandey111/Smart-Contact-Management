@@ -10,12 +10,19 @@ import com.example.smartcontactmanager.repository.UserRepository;
 
 @Service
 public class UserService {
-	 @Autowired
-	    private UserRepository userRepository;
-	    public User saveUser(User user) {
-	        return userRepository.save(user);
-	    }
-	    public Optional<User> findByEmail(String email) {
-	        return userRepository.findByEmail(email);
-	    }
+    @Autowired
+    private UserRepository userRepository;
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    // Add this method:
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 }
