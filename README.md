@@ -43,25 +43,20 @@ src/
 └── resources/
 └── application.properties
 
-## 🧑‍💻 Setup Instructions
+ 🧑‍💻 Setup Instructions
+ 
+1. ✅ Clone the Repository
 
-### 1. ✅ Clone the Repository
-```bash
 git clone https://github.com/your-username/smart-contact-manager.git
 cd smart-contact-manager
+
 2. ✅ MySQL Database Setup
 Create a database named:
-
-nginx
-Copy
-Edit
 smart_contact_manager
+
 3. ✅ Configure application.properties
 Edit: src/main/resources/application.properties
 
-properties
-Copy
-Edit
 spring.datasource.url=jdbc:mysql://localhost:3306/smart_contact_manager
 spring.datasource.username=YOUR_DB_USERNAME
 spring.datasource.password=YOUR_DB_PASSWORD
@@ -71,47 +66,45 @@ spring.jpa.show-sql=true
 
 # Optional JWT secret
 jwt.secret=your_jwt_secret
+
 4. ✅ Build & Run
-bash
-Copy
-Edit
+
 mvn clean install
 mvn spring-boot:run
+
 Application runs at: http://localhost:8080
 
-🔗 REST API Endpoints
-Endpoint	Method	Description	Auth Required
-/api/auth/login	POST	Login and get JWT token	❌ No
-/api/users	POST	Register a new user	❌ No
-/api/users/{id}	GET	Get user details by ID	✅ Yes
-/api/users/email/{email}	GET	Get user by email	✅ Yes
-/api/users/{id}	DELETE	Delete user by ID	✅ Yes
-/api/contacts	GET	Get all contacts for logged-in user	✅ Yes
-/api/contacts	POST	Add a new contact	✅ Yes
-/api/contacts/{id}	GET	Get a contact by ID	✅ Yes
-/api/contacts/{id}	DELETE	Delete a contact	✅ Yes
-/api/contacts/search?q=keyword	GET	Search contacts	✅ Yes
-/api/contacts/paged?page=0&size=10	GET	Get paginated contact list	✅ Yes
+## 🔗 REST API Endpoints
+
+| Endpoint                               | Method | Description                          | Auth Required |
+|----------------------------------------|--------|--------------------------------------|----------------|
+| `/api/auth/login`                      | POST   | Login and get JWT token              | ❌ No          |
+| `/api/users`                           | POST   | Register a new user                  | ❌ No          |
+| `/api/users/{id}`                      | GET    | Get user details by ID               | ✅ Yes         |
+| `/api/users/email/{email}`            | GET    | Get user by email                    | ✅ Yes         |
+| `/api/users/{id}`                      | DELETE | Delete user by ID                    | ✅ Yes         |
+| `/api/contacts`                        | GET    | Get contacts for logged-in user      | ✅ Yes         |
+| `/api/contacts`                        | POST   | Add a new contact                    | ✅ Yes         |
+| `/api/contacts/{id}`                   | GET    | Get a contact by ID                  | ✅ Yes         |
+| `/api/contacts/{id}`                   | DELETE | Delete a contact by ID               | ✅ Yes         |
+| `/api/contacts/search?q=keyword`       | GET    | Search contacts                      | ✅ Yes         |
+| `/api/contacts/paged?page=0&size=10`   | GET    | Paginated contacts list              | ✅ Yes         |
+
 
 🔐 How to Test (Postman / Swagger)
 1. 📥 Login & Get Token
-json
-Copy
-Edit
 POST /api/auth/login
 Body:
 {
   "email": "user@example.com",
   "password": "yourpassword"
 }
+
 2. 🔑 Use JWT Token
 For all protected endpoints, add the following header:
-
-makefile
-Copy
-Edit
 Authorization: Bearer <your-jwt-token>
 3. ✅ Perform CRUD, search, pagination easily via Postman
+
 🌱 Future Improvements
 ✅ Global Exception Handling (custom JSON errors)
 
@@ -127,5 +120,3 @@ Authorization: Bearer <your-jwt-token>
 
 👨‍💻 Author
 Harsh Pandey
-Smart Contact Manager Project — Spring Boot + MySQL + JWT
-https://github.com/HarshPandey111
