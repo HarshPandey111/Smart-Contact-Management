@@ -32,31 +32,39 @@ It allows users to register, log in, and manage their personal contact list with
 
 ## 📂 Project Structure
 
+```
 src/
-└── main/
-├── java/com/example/contactmanager/
-│ ├── controller/
-│ ├── entity/
-│ ├── repository/
-│ ├── service/
-│ └── security/
-└── resources/
-└── application.properties
+ └── main/
+     ├── java/com/example/contactmanager/
+     │   ├── controller/
+     │   ├── entity/
+     │   ├── repository/
+     │   ├── service/
+     │   └── security/
+     └── resources/
+         └── application.properties
+```
 
- 🧑‍💻 Setup Instructions
- 
-1. ✅ Clone the Repository
+---
 
+## 🧑‍💻 Setup Instructions
+
+### 1. ✅ Clone the Repository
+```bash
 git clone https://github.com/your-username/smart-contact-manager.git
 cd smart-contact-manager
+```
 
-2. ✅ MySQL Database Setup
+### 2. ✅ MySQL Database Setup
 Create a database named:
+```
 smart_contact_manager
+```
 
-3. ✅ Configure application.properties
-Edit: src/main/resources/application.properties
+### 3. ✅ Configure `application.properties`
+Edit: `src/main/resources/application.properties`
 
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/smart_contact_manager
 spring.datasource.username=YOUR_DB_USERNAME
 spring.datasource.password=YOUR_DB_PASSWORD
@@ -66,13 +74,17 @@ spring.jpa.show-sql=true
 
 # Optional JWT secret
 jwt.secret=your_jwt_secret
+```
 
-4. ✅ Build & Run
-
+### 4. ✅ Build & Run
+```bash
 mvn clean install
 mvn spring-boot:run
+```
 
-Application runs at: http://localhost:8080
+Application runs at: [http://localhost:8080](http://localhost:8080)
+
+---
 
 ## 🔗 REST API Endpoints
 
@@ -90,33 +102,45 @@ Application runs at: http://localhost:8080
 | `/api/contacts/search?q=keyword`       | GET    | Search contacts                      | ✅ Yes         |
 | `/api/contacts/paged?page=0&size=10`   | GET    | Paginated contacts list              | ✅ Yes         |
 
+---
 
-🔐 How to Test (Postman / Swagger)
-1. 📥 Login & Get Token
+## 🔐 How to Test (Postman / Swagger)
+
+### 1. 📥 Login & Get Token
+```json
 POST /api/auth/login
 Body:
 {
   "email": "user@example.com",
   "password": "yourpassword"
 }
+```
 
-2. 🔑 Use JWT Token
+### 2. 🔑 Use JWT Token
 For all protected endpoints, add the following header:
+
+```
 Authorization: Bearer <your-jwt-token>
-3. ✅ Perform CRUD, search, pagination easily via Postman
+```
 
-🌱 Future Improvements
-✅ Global Exception Handling (custom JSON errors)
+### 3. ✅ Perform CRUD, search, pagination easily via Postman
 
-✅ Swagger/OpenAPI Documentation
+---
 
-✅ Refresh Token Flow for JWT
+## 🌱 Future Improvements
 
-✅ Docker Containerization
+- ✅ Global Exception Handling (custom JSON errors)
+- ✅ Swagger/OpenAPI Documentation
+- ✅ Refresh Token Flow for JWT
+- ✅ Docker Containerization
+- ✅ CI/CD Pipeline with GitHub Actions
+- ✅ Role-based Access Control
 
-✅ CI/CD Pipeline with GitHub Actions
+---
 
-✅ Role-based Access Control
+## 👨‍💻 Author
 
-👨‍💻 Author
-Harsh Pandey
+**Harsh Pandey**  
+Smart Contact Manager Project — Spring Boot + MySQL + JWT  
+[GitHub Profile](https://github.com/yHarshPandey111)
+
