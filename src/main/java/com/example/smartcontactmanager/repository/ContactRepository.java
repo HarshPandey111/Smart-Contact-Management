@@ -1,11 +1,10 @@
 package com.example.smartcontactmanager.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.example.smartcontactmanager.entity.Contact;
+import com.example.smartcontactmanager.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-@Repository
-public interface ContactRepository extends JpaRepository<Contact, Long>{
-
+public interface ContactRepository extends JpaRepository<Contact, Long> {
+    List<Contact> findByUser(User user);
 }

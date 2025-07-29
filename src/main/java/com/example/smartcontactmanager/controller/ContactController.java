@@ -1,51 +1,75 @@
 package com.example.smartcontactmanager.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.smartcontactmanager.entity.Contact;
-import com.example.smartcontactmanager.service.ContactService;
+import com.example.smartcontactmanager.entity.User;
+import com.example.smartcontactmanager.repository.ContactRepository;
+import com.example.smartcontactmanager.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-
-//import com.smartcontact.smartcontactmanager.entity.Contact;
-//import com.smartcontact.smartcontactmanager.service.ContactService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/api/contacts")
 public class ContactController {
-	 @Autowired
-	    private ContactService contactService;
-	 
-	 @PostMapping
-	    public ResponseEntity<Contact> createContact(@RequestBody Contact contact) {
-	        Contact savedContact = contactService.saveContact(contact);
-	        return ResponseEntity.ok(savedContact);
-	    }
-	    @GetMapping
-	    public List<Contact>getAllContacts() {
-	        return contactService.findAll();
-     }
-      
-	    @GetMapping("/{id}")
-	    public ResponseEntity<Contact> getContactById(@PathVariable Long id) {
-	        return contactService.findById(id)
-	                .map(ResponseEntity::ok)
-	                .orElse(ResponseEntity.notFound().build());
-	    }
-	    @DeleteMapping("/{id}")
-	    public ResponseEntity<Void> deleteContact(@PathVariable Long id) {
-	        contactService.deleteById(id);
-	        return ResponseEntity.noContent().build();
-	    }
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ContactRepository contactRepository;
+
+    // Get All Contacts - अब सिर्फ जिनका token भेजा है, उनके
+    @GetMapping("/search")
+    public List<Contact> searchContacts(
+            @RequestParam("q") String keyword,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+
+        return contactRepository.searchByKeyword(user, keyword);
+    }
+
+    // बाकी CRUD (example: create)
+    @PostMapping
+    public Contact createContact(@RequestBody Contact contact, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        contact.setUser(user); // SET OWNER!
+        return contactRepository.save(contact);
+    }
+
+    // किसी भी contact को id से लाओ, लेकिन user check करो
+    @GetMapping("/{id}")
+    public Contact getContactById(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        Contact contact = contactRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contact not found id: " + id));
+        if (!contact.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Not allowed! Not your contact.");
+        }
+        return contact;
+    }
+
+    // Delete contact - केवल owner delete कर सकता है
+    @DeleteMapping("/{id}")
+    public void deleteContact(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+        Contact contact = contactRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contact not found id: " + id));
+        if (!contact.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Not allowed! Not your contact.");
+        }
+        contactRepository.delete(contact);
+    }
+
+    // Update contact भी इसी pattern पर कर सकते हो (user check करके)!
 }
